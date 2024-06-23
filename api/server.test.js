@@ -51,3 +51,16 @@ describe('[POST] /api/auth/register', () => {
     expect(res.body).toHaveProperty('message', 'username taken');
 	});
 })
+
+describe('[POST] /api/auth/login', () => {
+  let login = { username: 'Jason', password: 'yayaay' }
+  test('incorrect username = 400 status', async () => {
+    const res = await request(server).post('/api/auth/login').send(login)
+    expect(res.status).toBe(400)
+  })
+  test('incorrect Password = 400 status', async () => {
+    login = { username: 'John', password: 'yayaay' };
+    const res = await request(server).post('/api/auth/login').send(login)
+    expect(res.status).toBe(400);
+  })
+})

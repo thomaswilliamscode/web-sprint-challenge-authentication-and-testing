@@ -1,9 +1,10 @@
 const router = require('express').Router();
 const authMiddle = require('../middleware/auth-middleware')
 const userModel = require('../users/users-model')
+const restricted = require('../middleware/restricted')
 
 
-router.get('/users', async (req, res) => {
+router.get('/users', restricted, async (req, res) => {
   let answer = await userModel.getUsers()
   res.status(200).json(answer)
 })
@@ -38,8 +39,15 @@ router.post('/register', authMiddle.userNameCheck, authMiddle.hashPass, async (r
   */
 });
 
-router.post('/login', (req, res) => {
-  res.end('implement login, please!');
+router.post('/login', authMiddle.loginCheck, authMiddle.tokenGenerate, (req, res) => {
+  let token = req.token
+  let username = req.user.username
+  let message = `welcome, ${username}`;
+  let response = { message: message, token: token}
+  res.setHeader('Authorization', `Bearer ${token}`);
+  console.log('Token:', token);
+	console.log('Headers:', res.getHeaders());
+  res.status(200).json(response)
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
