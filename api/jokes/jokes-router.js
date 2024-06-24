@@ -4,7 +4,7 @@ const jokes = require('./jokes-data');
 
 const restricted = require('../middleware/restricted');
 
-router.get('/', (req, res) => {
+router.get('/', restricted, (req, res) => {
   res.status(200).json(jokes);
 });
 
