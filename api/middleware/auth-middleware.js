@@ -36,24 +36,25 @@ const hashPass = async (req, res, next) => {
 
 const loginCheck = async (req, res, next) => {
 	let { username, password } = req.body
-	if(!username || !password){
-		res.status(400).json({ message: 'username and password required' });
-	}
-	let [answer] = await db('users').where('username', username)
-	let correctPass = false;
-	let pass;
-	if (answer) {
-		pass = bcrypt.compareSync(password, answer.password);
-		if (pass) {
-			correctPass = true;
+	if( username && password){
+		let [answer] = await db('users').where('username', username);
+		let correctPass = false;
+		let pass;
+		if (answer) {
+			pass = bcrypt.compareSync(password, answer.password);
+			if (pass) {
+				correctPass = true;
+			}
 		}
-	}
-	if(answer && correctPass) {
-		let userInfo = { id: answer.id,username: answer.username }
-		req.user = userInfo
-		next()
+		if (answer && correctPass) {
+			let userInfo = { id: answer.id, username: answer.username };
+			req.user = userInfo;
+			next();
+		} else {
+			res.status(400).json({ message: 'invalid credentials' });
+		}
 	} else {
-		res.status(400).json({ message: 'invalid credentials' });
+		res.status(400).json({ message: 'username and password required' })
 	}
 }
 

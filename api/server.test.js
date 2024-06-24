@@ -63,4 +63,11 @@ describe('[POST] /api/auth/login', () => {
     const res = await request(server).post('/api/auth/login').send(login)
     expect(res.status).toBe(400);
   })
+  test(
+		'responds with an error status code if username or password are not sent', async () => {
+      login = {}
+      const res = await request(server).post('/api/auth/login').send(login)
+      expect(res.status).toBe(400)
+    }
+	);
 })
