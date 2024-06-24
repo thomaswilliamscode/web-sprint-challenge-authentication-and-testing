@@ -22,9 +22,9 @@ test('environment is testing', () => {
 
 
 describe('[GET] /api/jokes', () => {
-  test('responds with 200 status', async () => {
+  test('responds with 401 status if no token', async () => {
     const res = await request(server).get('/api/jokes')
-    expect(res.status).toBe(200)
+    expect(res.status).toBe(401)
   })
 })
 
